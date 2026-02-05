@@ -1,0 +1,40 @@
+---
+alwaysApply: true
+---
+
+---
+description: Next.js structure and component conventions (App Router, TS, clean architecture).
+globs:
+  - "app/**/*"
+  - "src/app/**/*"
+  - "src/components/**/*"
+  - "src/features/**/*"
+  - "src/lib/**/*"
+---
+
+# Next.js / React conventions
+- Prefer **Server Components** by default. Add `"use client"` only when needed (state, effects, browser-only APIs).
+- Keep side effects and browser APIs inside client components.
+- Prefer `next/link` for navigation and `next/image` for images.
+
+# Folder organization (recommended)
+- `src/app/...` routes, layouts, loading/error boundaries.
+- `src/components/...` reusable UI components.
+- `src/features/<feature>/...` feature modules (components, hooks, services).
+- `src/lib/...` shared utilities (api clients, validators, formatting).
+- `src/types/...` shared types (only if needed).
+
+# Data & boundaries
+- Keep data fetching close to the route (server side), and pass typed props down.
+- Avoid calling external services directly from deeply nested UI components.
+- Route handlers/actions must validate input (e.g., Zod) and return typed results.
+
+# Accessibility & UX
+- Use semantic HTML.
+- `aria-label` and other user-facing accessibility labels MUST be in Spanish.
+- Loading and empty states must exist and be in Spanish.
+
+# Metadata
+- Page titles/descriptions shown to users must be Spanish (LatAm).
+- Code that defines metadata remains English.
+

@@ -1,0 +1,46 @@
+---
+alwaysApply: true
+---
+
+---
+description: Core repo conventions: English code + Spanish LatAm UI, naming, architecture, and consistency.
+globs:
+  - "**/*"
+---
+
+# Non-negotiables (Language split)
+- **All code identifiers** MUST be in **English**: variables, functions, classes, types, interfaces, filenames, commit messages, and code comments.
+- **All user-facing text** (buttons, labels, headings, errors, empty states, tooltips, emails displayed in UI) MUST be in **Spanish (Latin American neutral)**.
+- Do not mix languages in the same layer:
+  - Code: English only.
+  - UI copy: Spanish only (except brand names, product names, technical acronyms).
+- If a concept exists in Spanish in the business domain, still name the code in English (e.g., `invoice`, `withholdingTax`, `chartOfAccounts`).
+
+# Before writing code
+- First inspect existing patterns in the repo: folder structure, naming, components style, lint rules, and existing utilities.
+- Prefer extending existing abstractions over creating new ones.
+
+# Naming & style
+- Use `camelCase` for variables/functions, `PascalCase` for components/types, `kebab-case` for filenames when applicable.
+- Booleans must start with `is/has/can/should`.
+- Avoid `any`. Prefer explicit types and narrow unions.
+- Prefer small pure functions; avoid god-components and deeply nested logic.
+
+# Comments
+- Comments MUST be in English.
+- Comment **why**, not what. If code is self-explanatory, do not comment.
+
+# UI strings strategy
+- Centralize Spanish UI copy in one place (recommended):
+  - `src/i18n/es-419.json` (or the existing i18n solution if already present).
+- Components should reference UI text via a simple accessor (e.g., `t("key")`) if i18n exists.
+- If i18n is not set up yet, keep strings inline temporarily BUT do not duplicate: extract repeated strings to a single constants/messages file.
+
+# Error handling
+- Never swallow errors silently.
+- User-facing error messages must be Spanish and actionable.
+- Developer-facing logs/comments remain English.
+
+# Security
+- Never hardcode secrets or tokens. Use environment variables.
+- Add/update `.env.example` when introducing new env vars.

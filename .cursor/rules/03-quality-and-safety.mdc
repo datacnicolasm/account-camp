@@ -1,0 +1,30 @@
+---
+alwaysApply: true
+---
+
+---
+description: Quality bar: linting, tests, PR-ready output, minimal diffs, and documentation hygiene.
+globs:
+  - "**/*"
+---
+
+# Output quality bar
+- Always produce code that is:
+  - Type-safe
+  - Lint-clean
+  - Consistent with existing project patterns
+  - Minimal diff (change only what is necessary)
+
+# Testing approach
+- If the repo already has a test framework, add/adjust tests for critical logic.
+- If there is no test setup, do not invent a full test suite unless requested; instead, keep logic modular and easily testable.
+
+# Documentation
+- Keep README/Docs in the language the repo already uses.
+- Code comments remain English.
+- UI copy remains Spanish.
+
+# No noisy changes
+- Do not reformat unrelated files.
+- Do not rename variables/files unless it improves clarity and is consistently applied.
+

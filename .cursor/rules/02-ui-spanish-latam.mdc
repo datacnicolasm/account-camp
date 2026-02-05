@@ -1,0 +1,41 @@
+---
+alwaysApply: true
+---
+
+---
+description: Spanish (LatAm) UI copy rules: consistent tone, labels, validation, microcopy.
+globs:
+  - "**/*.tsx"
+  - "**/*.jsx"
+---
+
+# Spanish (LatAm) UI copy standards
+- Use **neutral Latin American Spanish** (avoid local slang).
+- Prefer **tú** tone consistently (unless the project already uses "usted").
+- Keep buttons short: verb + object when needed.
+  - Good: "Guardar", "Guardar cambios", "Continuar", "Cancelar", "Eliminar", "Volver"
+  - Avoid: long sentences on buttons.
+
+# Consistent key terms (use these exact spellings)
+- "Iniciar sesión" (not "Log in")
+- "Cerrar sesión"
+- "Registrarse"
+- "Correo electrónico"
+- "Contraseña"
+- "Guardar cambios"
+- "Crear cuenta"
+- "Restablecer contraseña"
+- "Cargando…" (with ellipsis)
+- "No hay resultados"
+- "Intenta de nuevo"
+
+# Validation and errors
+- Errors must be:
+  1) clear, 2) specific, 3) actionable, and 4) Spanish.
+- Prefer: "Revisa el correo electrónico" vs "Error 400".
+- If a field is required: "Este campo es obligatorio".
+
+# Formatting
+- Use `Intl` formatting when displaying dates/numbers/currency.
+- Default locale: `es-419` for text; for formatting, follow an app-level setting (fallback to `es-CO` if your audience is mainly Colombia).
+
