@@ -44,3 +44,112 @@ export function getAuthErrorMessage(error: unknown): string {
 
   return "Ocurrió un error. Intenta de nuevo.";
 }
+
+/**
+ * Maps Supabase signUp errors to user-friendly Spanish messages.
+ */
+export function getSignUpErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    const msg = error.message.toLowerCase();
+    if (
+      msg.includes("already registered") ||
+      msg.includes("already been registered") ||
+      msg.includes("user already exists")
+    ) {
+      return "Este correo ya está registrado. Inicia sesión o restablece tu contraseña.";
+    }
+    if (
+      msg.includes("password should be") ||
+      msg.includes("weak") ||
+      msg.includes("too short")
+    ) {
+      return "La contraseña es muy débil. Usa al menos 8 caracteres.";
+    }
+    if (msg.includes("fetch") || msg.includes("network")) {
+      return "Error de conexión. Revisa tu internet e intenta de nuevo.";
+    }
+  }
+
+  if (isAuthApiError(error)) {
+    const status = error.status;
+    if (status === 429) {
+      return "Demasiados intentos. Espera unos minutos e intenta de nuevo.";
+    }
+    if (status >= 500) {
+      return "Error del servidor. Intenta de nuevo más tarde.";
+    }
+  }
+
+  return "Ocurrió un error. Intenta de nuevo.";
+}
+
+/**
+ * Maps verification/callback errors to user-friendly Spanish messages.
+ */
+export function getVerificationErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    const msg = error.message.toLowerCase();
+    if (
+      msg.includes("expired") ||
+      msg.includes("invalid") ||
+      msg.includes("already been used")
+    ) {
+      return "El enlace de verificación expiró o ya fue usado. Inicia sesión o solicita un nuevo correo.";
+    }
+    if (msg.includes("fetch") || msg.includes("network")) {
+      return "Error de conexión. Revisa tu internet e intenta de nuevo.";
+    }
+  }
+
+  if (isAuthApiError(error)) {
+    const authError = error as { code?: string };
+    if (
+      authError.code === "exchange_code_not_found" ||
+      authError.code === "invalid_grant"
+    ) {
+      return "El enlace de verificación expiró o ya fue usado. Inicia sesión o solicita un nuevo correo.";
+    }
+    if (error.status >= 500) {
+      return "Error del servidor. Intenta de nuevo más tarde.";
+    }
+  }
+
+  return "No pudimos verificar tu correo. Intenta de nuevo.";
+}
+
+/**
+ * Maps forgot/reset password errors to user-friendly Spanish messages.
+ */
+export function getResetPasswordErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    const msg = error.message.toLowerCase();
+    if (
+      msg.includes("expired") ||
+      msg.includes("invalid") ||
+      msg.includes("already been used")
+    ) {
+      return "El enlace expiró o ya fue usado. Solicita un nuevo enlace para restablecer tu contraseña.";
+    }
+    if (msg.includes("fetch") || msg.includes("network")) {
+      return "Error de conexión. Revisa tu internet e intenta de nuevo.";
+    }
+  }
+
+  if (isAuthApiError(error)) {
+    const authError = error as { code?: string };
+    if (
+      authError.code === "exchange_code_not_found" ||
+      authError.code === "invalid_grant"
+    ) {
+      return "El enlace expiró o ya fue usado. Solicita un nuevo enlace para restablecer tu contraseña.";
+    }
+    if (error.status === 429) {
+      return "Demasiados intentos. Espera unos minutos e intenta de nuevo.";
+    }
+    if (error.status >= 500) {
+      return "Error del servidor. Intenta de nuevo más tarde.";
+    }
+  }
+
+  return "Ocurrió un error. Intenta de nuevo.";
+}

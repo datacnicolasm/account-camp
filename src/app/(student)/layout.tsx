@@ -1,18 +1,9 @@
-import Link from "next/link";
+import { StudentShell } from "@/components/shell/StudentShell";
 
 export default function StudentLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      <nav>
-        <Link href="/student">Mis cursos</Link>
-        <Link href="/">Inicio</Link>
-        <Link href="/login">Salir</Link>
-      </nav>
-      {children}
-    </>
-  );
+  return <StudentShell>{children}</StudentShell>;
 }

@@ -4,7 +4,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-brand-navy">
+    <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 relative overflow-hidden bg-brand-navy">
       {/* Grid pattern - white lines on dark background */}
       <div
         className="absolute inset-0 opacity-20"

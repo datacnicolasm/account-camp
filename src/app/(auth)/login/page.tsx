@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { BrandMark } from "@/components/brand/BrandMark";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { createClient } from "@/lib/supabase/client";
 import { getAuthErrorMessage } from "@/lib/auth-errors";
@@ -82,13 +83,11 @@ export default function LoginPage() {
 
   return (
     <div className="w-full max-w-md mx-auto">
+      <BrandMark />
+
       <FadeIn duration={0.35} y={10}>
         <div className="rounded-2xl border border-border bg-background p-8 sm:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
-        <div className="mb-8 flex flex-col items-center lg:hidden">
-          <BrandLogo />
-        </div>
-
-        <div className="mb-8 text-center lg:text-left">
+        <div className="mb-8 text-center">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground text-balance">
             Bienvenido de vuelta
           </h1>
@@ -263,22 +262,5 @@ export default function LoginPage() {
         </div>
       </FadeIn>
     </div>
-  );
-}
-
-function BrandLogo() {
-  return (
-    <Link
-      href="/"
-      className="flex items-center gap-2 group"
-      aria-label="AccountCamp - Inicio"
-    >
-      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-background">
-        <span className="text-sm font-bold leading-none">A</span>
-      </div>
-      <span className="text-lg font-semibold tracking-tight text-foreground">
-        AccountCamp
-      </span>
-    </Link>
   );
 }
