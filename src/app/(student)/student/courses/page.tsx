@@ -1,10 +1,13 @@
 import { CoursesHero } from "@/components/student/CoursesHero";
 import { CoursesListClient } from "@/components/student/CoursesListClient";
 import { RetryErrorCard } from "@/components/student/RetryErrorCard";
-import { fetchPublishedCoursesWithInstructors } from "@/lib/supabase/courses";
+import {
+  fetchPublishedCoursesWithInstructors,
+  type CourseWithInstructor,
+} from "@/lib/supabase/courses";
 
 export default async function CoursesPage() {
-  let items = [];
+  let items: CourseWithInstructor[] = [];
   let error: string | null = null;
 
   try {
