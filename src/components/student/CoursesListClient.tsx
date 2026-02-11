@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 
 import type { CourseWithInstructor } from "@/lib/supabase/courses";
 import { CoursesFilters, type DifficultyFilter } from "./CoursesFilters";
@@ -13,9 +13,10 @@ interface CoursesListClientProps {
 export function CoursesListClient({ items }: CoursesListClientProps) {
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState<DifficultyFilter>("all");
+  const deferredSearch = useDeferredValue(search);
 
   const filteredItems = useMemo(() => {
-    const term = search.trim().toLowerCase();
+    const term = deferredSearch.trim().toLowerCase();
 
     return items.filter(({ course }) => {
       if (
@@ -30,7 +31,7 @@ export function CoursesListClient({ items }: CoursesListClientProps) {
       const haystack = `${course.name} ${course.shortDescription ?? ""}`.toLowerCase();
       return haystack.includes(term);
     });
-  }, [items, search, difficulty]);
+  }, [items, deferredSearch, difficulty]);
 
   return (
     <div className="space-y-6">

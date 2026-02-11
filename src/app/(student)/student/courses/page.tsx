@@ -1,6 +1,6 @@
 import { CoursesHero } from "@/components/student/CoursesHero";
 import { CoursesListClient } from "@/components/student/CoursesListClient";
-import { RetryErrorCard } from "@/components/student/RetryErrorCard";
+import { RouteErrorState } from "@/components/student/RouteErrorState";
 import {
   fetchPublishedCoursesWithInstructors,
   type CourseWithInstructor,
@@ -22,7 +22,7 @@ export default async function CoursesPage() {
         <CoursesHero />
 
         {error ? (
-          <RetryErrorCard message={error} />
+          <RouteErrorState message={error} />
         ) : items.length === 0 ? (
           <div className="rounded-2xl border border-border bg-card p-10 text-center shadow-sm">
             <h2 className="text-base font-semibold text-foreground">

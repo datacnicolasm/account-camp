@@ -8,7 +8,10 @@ import { Clock, Signal } from "lucide-react";
 import type { CourseWithInstructor } from "@/lib/supabase/courses";
 import { Button } from "@/components/ui/button";
 import { getInitials, getSafeDisplayName } from "@/lib/ui/avatars";
-import { formatDifficulty, formatDuration } from "@/lib/courses/formatters";
+import {
+  difficultyToLabel,
+  formatMinutesToDurationLabel,
+} from "@/lib/courses/formatters";
 
 interface CoursesGridProps {
   items: CourseWithInstructor[];
@@ -39,8 +42,8 @@ export function CoursesGrid({ items }: CoursesGridProps) {
     >
       {items.map((item, index) => {
         const { course, instructor } = item;
-        const durationLabel = formatDuration(course.estimatedMinutes);
-        const difficultyLabel = formatDifficulty(course.difficulty);
+        const durationLabel = formatMinutesToDurationLabel(course.estimatedMinutes);
+        const difficultyLabel = difficultyToLabel(course.difficulty);
 
         return (
           <motion.div
@@ -54,18 +57,17 @@ export function CoursesGrid({ items }: CoursesGridProps) {
               ease: "easeOut",
               delay: shouldReduceMotion ? 0 : index * 0.05,
             }}
-            className="group"
+            className="group flex h-full flex-col"
           >
-            <div className="relative flex h-full min-h-[240px] flex-col overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm transition-transform transition-colors hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
+            <div className="relative flex h-full min-h-[260px] flex-col overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm transition-transform transition-colors hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
               <div className="absolute right-0 top-0 h-24 w-24 translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 transition-opacity group-hover:bg-primary/10" />
 
-              {/* Content block grows */}
-              <div className="flex flex-1 flex-col">
+              <div className="flex min-h-0 flex-1 flex-col">
                 <div className="relative space-y-2">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                     CURSO
                   </p>
-                  <h2 className="line-clamp-2 text-base font-semibold tracking-tight text-foreground sm:text-lg">
+                  <h2 className="line-clamp-2 min-h-[2.5rem] text-base font-semibold tracking-tight text-foreground sm:text-lg">
                     {course.name}
                   </h2>
                 </div>
@@ -77,10 +79,12 @@ export function CoursesGrid({ items }: CoursesGridProps) {
                   </span>
                 </div>
 
-                {course.shortDescription && (
-                  <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+                {course.shortDescription ? (
+                  <p className="mt-3 line-clamp-2 min-h-[2.5rem] text-sm leading-relaxed text-muted-foreground">
                     {course.shortDescription}
                   </p>
+                ) : (
+                  <div className="mt-3 min-h-[2.5rem]" aria-hidden />
                 )}
 
                 <div className="my-4 flex items-center gap-2">
@@ -106,7 +110,6 @@ export function CoursesGrid({ items }: CoursesGridProps) {
                 </div>
               </div>
 
-              {/* Bottom row pinned to bottom */}
               <div className="mt-auto border-t border-border/60 pt-3">
                 <div className="flex items-center justify-between gap-3">
                   <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
