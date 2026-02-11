@@ -253,19 +253,22 @@ export async function fetchCourseDetailBySlug(
   if (pivotError) throw pivotError;
 
   const typeSlugs = new Set<string>();
-  const rawRows = (pivotRows ?? []) as Array<{
+  type PivotRow = {
     chapter_id: string;
     position: number;
     is_required: boolean;
-    lessons: {
-      id: string;
-      name: string;
-      xp_points: number;
-      type_slug: string;
-      estimated_minutes: number | null;
-      is_published: boolean;
-    } | null;
-  }>;
+    lessons:
+      | {
+          id: string;
+          name: string;
+          xp_points: number;
+          type_slug: string;
+          estimated_minutes: number | null;
+          is_published: boolean;
+        }
+      | null;
+  };
+  const rawRows = (pivotRows ?? []) as unknown as PivotRow[];
 
   const byChapter: Record<
     string,
