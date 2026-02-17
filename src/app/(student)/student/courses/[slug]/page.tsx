@@ -35,7 +35,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
     return (
       <div className="p-6">
         <div className="mx-auto max-w-5xl">
-          <div className="rounded-2xl border border-border bg-card p-12 text-center shadow-sm">
+          <div className="rounded-lg border border-border bg-card p-12 text-center shadow-sm">
             <h1 className="text-xl font-semibold text-foreground">
               Curso no encontrado
             </h1>

@@ -32,9 +32,7 @@ export function CourseDetailHero({
 }: CourseDetailHeroProps) {
   const hoursLabel = formatHours(totalMinutes);
   const hasFirstLesson = Boolean(firstLessonId);
-  const startHref = hasFirstLesson
-    ? `/student/courses/${courseSlug}/lecciones/${firstLessonId}`
-    : null;
+  const startHref = hasFirstLesson ? `/lessons/${firstLessonId}` : null;
 
   const statItems: { label: string; value: string; icon: React.ReactNode }[] = [];
   Object.entries(totalsByType).forEach(([slug, count]) => {
