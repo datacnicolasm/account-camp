@@ -3,5 +3,5 @@ export default function LessonLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="min-h-screen bg-background">{children}</div>;
+  return <div className="h-dvh overflow-hidden bg-background">{children}</div>;
 }

@@ -15,24 +15,20 @@ const THROTTLE_SECONDS = 10;
 
 interface VideoLessonPlayerProps {
   lessonId: string;
-  lessonName: string;
   videoUrl: string;
   posterUrl: string | null;
   durationSeconds: number | null;
   initialPositionSeconds: number;
-  xpPoints: number;
   onProgressChange: (params: { lastPositionSeconds: number; progressPercent: number }) => void;
   onComplete: () => void;
 }
 
 export function VideoLessonPlayer({
   lessonId,
-  lessonName,
   videoUrl,
   posterUrl,
   durationSeconds,
   initialPositionSeconds,
-  xpPoints,
   onProgressChange,
   onComplete,
 }: VideoLessonPlayerProps) {
@@ -185,11 +181,8 @@ export function VideoLessonPlayer({
 
   if (videoLoadError) {
     return (
-      <div className="px-6 py-6">
-        <div className="mx-auto max-w-6xl space-y-4">
-          <p className="text-sm font-medium text-muted-foreground truncate">
-            {lessonName}
-          </p>
+      <div className="flex h-full min-h-0 flex-col items-center justify-center px-4 py-4">
+        <div className="mx-auto w-full max-w-6xl">
           <div className="rounded-lg border border-border bg-card p-8 text-center shadow-sm">
             <p className="text-muted-foreground">
               No pudimos cargar el video. Reintenta.
@@ -208,29 +201,27 @@ export function VideoLessonPlayer({
   }
 
   return (
-    <div className="px-6 py-6">
-      <div className="mx-auto max-w-6xl space-y-4">
-        <p className="text-sm font-medium text-muted-foreground truncate">
-          {lessonName}
-        </p>
-        <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
+    <div className="flex h-full min-h-0 flex-col px-4 py-3">
+      <div className="flex min-h-0 flex-1 items-center justify-center py-2">
+        <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-center overflow-hidden rounded-lg border border-border bg-black shadow-sm">
           <video
             ref={videoRef}
             src={videoUrl}
             poster={posterUrl ?? undefined}
             controls
-            className="w-full aspect-video bg-black"
+            className="max-h-full max-w-full object-contain"
             preload="metadata"
             playsInline
             onError={handleVideoError}
           />
         </div>
-        {isAuthenticated === false && (
-          <p className="text-center text-xs text-muted-foreground">
-            Inicia sesión para guardar tu avance.
-          </p>
-        )}
       </div>
+
+      {isAuthenticated === false && (
+        <p className="shrink-0 text-center text-xs text-muted-foreground">
+          Inicia sesión para guardar tu avance.
+        </p>
+      )}
     </div>
   );
 }

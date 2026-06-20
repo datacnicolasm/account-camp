@@ -6,7 +6,7 @@ import { ArrowLeft, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
-import type { LessonViewerContext } from "@/lib/supabase/lessons";
+import type { LessonViewerContext } from "@/lib/supabase/lesson-viewer.types";
 
 interface LessonHeaderProps {
   courseSlug: string | null;
@@ -33,13 +33,7 @@ export function LessonHeader({
       : "/student/courses";
 
   return (
-    <header
-      className="h-14 shrink-0 border-b border-white/10 px-4"
-      style={{
-        background:
-          "linear-gradient(135deg, #0b1f3a 0%, #0d2a48 50%, rgba(34, 211, 238, 0.12) 100%)",
-      }}
-    >
+    <header className="h-14 shrink-0 border-b border-white/10 bg-brand-navy px-4">
       <div className="mx-auto flex h-full max-w-6xl items-center justify-between gap-4">
         <div className="min-w-0">
           <Button

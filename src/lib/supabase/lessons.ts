@@ -1,34 +1,25 @@
+import "server-only";
+
 import { createClient } from "./server";
+import type {
+  LessonViewerContext,
+  LessonViewerData,
+  LessonViewerLesson,
+  LessonViewerQuiz,
+  LessonViewerVideo,
+} from "./lesson-viewer.types";
+import { parseQuizQuestionData } from "./quiz-lesson.schema";
+import { resolveNextLessonHref } from "./lesson-navigation";
+
+export type {
+  LessonViewerContext,
+  LessonViewerData,
+  LessonViewerLesson,
+  LessonViewerQuiz,
+  LessonViewerVideo,
+} from "./lesson-viewer.types";
 
 const isDev = process.env.NODE_ENV !== "production";
-
-export interface LessonViewerLesson {
-  id: string;
-  name: string;
-  xpPoints: number;
-  typeSlug: string;
-}
-
-export interface LessonViewerVideo {
-  bucket: string;
-  videoPath: string;
-  posterPath: string | null;
-  durationSeconds: number | null;
-}
-
-export interface LessonViewerContext {
-  courseSlug: string;
-  courseName: string;
-  chapterName: string;
-  chapterPosition: number;
-}
-
-export interface LessonViewerData {
-  lesson: LessonViewerLesson;
-  typeKey: string;
-  video: LessonViewerVideo | null;
-  context: LessonViewerContext | null;
-}
 
 export async function fetchLessonViewerData(
   lessonId: string
@@ -101,6 +92,38 @@ export async function fetchLessonViewerData(
     }
   }
 
+  let quiz: LessonViewerQuiz | null = null;
+  if (lesson.typeSlug === "quiz") {
+    const { data: quizRow, error: quizError } = await supabase
+      .from("lesson_quizzes")
+      .select("lesson_id, title, description, question_data")
+      .eq("lesson_id", lessonId)
+      .maybeSingle();
+
+    if (isDev && quizError) {
+      // eslint-disable-next-line no-console
+      console.log("[fetchLessonViewerData] lesson_quizzes error:", {
+        code: quizError.code,
+        message: quizError.message,
+        details: quizError.details,
+      });
+    }
+
+    if (quizRow) {
+      const questionData = parseQuizQuestionData(quizRow.question_data);
+      if (questionData) {
+        quiz = {
+          title: quizRow.title ?? "",
+          description: (quizRow.description as string | null) ?? null,
+          questionData,
+        };
+      } else if (isDev) {
+        // eslint-disable-next-line no-console
+        console.log("[fetchLessonViewerData] invalid question_data for lesson:", lessonId);
+      }
+    }
+  }
+
   let context: LessonViewerContext | null = null;
   const { data: pivotRow } = await supabase
     .from("chapter_lessons")
@@ -147,10 +170,22 @@ export async function fetchLessonViewerData(
     };
   }
 
+  let nextLessonHref: string | null = null;
+  const courseId = chapters?.course_id ?? courseRow?.id;
+  if (courseId) {
+    nextLessonHref = await resolveNextLessonHref(
+      supabase,
+      lessonId,
+      courseId
+    );
+  }
+
   return {
     lesson,
     typeKey,
     video,
+    quiz,
     context,
+    nextLessonHref,
   };
 }

@@ -65,6 +65,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
       lesson: data.lesson,
       typeKey: data.typeKey,
       video: data.video,
+      quiz: data.quiz,
     });
   }
 
@@ -111,6 +112,25 @@ export default async function LessonPage({ params }: LessonPageProps) {
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             El video de esta lección no está disponible en este momento.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (data.typeKey === "quiz" && !data.quiz) {
+    if (isDev) {
+      // eslint-disable-next-line no-console
+      console.log("[LessonPage] quiz type but no lesson_quizzes row or invalid question_data");
+    }
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-background p-6">
+        <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 text-center shadow-sm">
+          <h1 className="text-lg font-semibold text-foreground">
+            Contenido no disponible
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            El cuestionario de esta lección no está disponible en este momento.
           </p>
         </div>
       </div>
@@ -185,7 +205,9 @@ export default async function LessonPage({ params }: LessonPageProps) {
       lesson={data.lesson}
       typeKey={data.typeKey}
       video={data.video}
+      quiz={data.quiz}
       context={data.context}
+      nextLessonHref={data.nextLessonHref}
       videoUrl={videoUrl}
       posterUrl={posterUrl}
       durationSeconds={data.video?.durationSeconds ?? null}

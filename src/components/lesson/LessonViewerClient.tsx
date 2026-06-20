@@ -4,18 +4,22 @@ import { useState, useCallback } from "react";
 
 import { LessonShell } from "./LessonShell";
 import { VideoLessonPlayer } from "./VideoLessonPlayer";
+import { QuizLessonPlayer } from "./QuizLessonPlayer";
 import { ComingSoonLessonType } from "./ComingSoonLessonType";
 import type {
   LessonViewerLesson,
   LessonViewerContext,
   LessonViewerVideo,
-} from "@/lib/supabase/lessons";
+  LessonViewerQuiz,
+} from "@/lib/supabase/lesson-viewer.types";
 
 interface LessonViewerClientProps {
   lesson: LessonViewerLesson;
   typeKey: string;
   video: LessonViewerVideo | null;
+  quiz: LessonViewerQuiz | null;
   context: LessonViewerContext | null;
+  nextLessonHref: string | null;
   videoUrl: string;
   posterUrl: string | null;
   durationSeconds: number | null;
@@ -25,7 +29,9 @@ export function LessonViewerClient({
   lesson,
   typeKey,
   video,
+  quiz,
   context,
+  nextLessonHref,
   videoUrl,
   posterUrl,
   durationSeconds,
@@ -50,16 +56,31 @@ export function LessonViewerClient({
     setProgressPercent(100);
   }, [lesson.id]);
 
+  const handleQuizProgressChange = useCallback(
+    (params: { progressPercent: number }) => {
+      setProgressPercent(params.progressPercent);
+    },
+    []
+  );
+
+  const isQuizLesson = typeKey === "quiz" && quiz !== null;
+
   const content =
-    typeKey === "video" && video ? (
+    isQuizLesson ? (
+      <QuizLessonPlayer
+        lessonId={lesson.id}
+        quiz={quiz}
+        nextLessonHref={nextLessonHref}
+        onProgressChange={handleQuizProgressChange}
+        onComplete={handleComplete}
+      />
+    ) : typeKey === "video" && video ? (
       <VideoLessonPlayer
         lessonId={lesson.id}
-        lessonName={lesson.name}
         videoUrl={videoUrl}
         posterUrl={posterUrl}
         durationSeconds={durationSeconds}
         initialPositionSeconds={0}
-        xpPoints={lesson.xpPoints}
         onProgressChange={handleProgressChange}
         onComplete={handleComplete}
       />
@@ -73,7 +94,8 @@ export function LessonViewerClient({
       context={context}
       onMarkComplete={handleMarkComplete}
       progressPercent={progressPercent}
-      nextLessonHref={null}
+      nextLessonHref={nextLessonHref}
+      showMarkCompleteButton={!isQuizLesson}
     >
       {content}
     </LessonShell>

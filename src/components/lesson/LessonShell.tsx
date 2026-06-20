@@ -2,7 +2,7 @@
 
 import { LessonHeader } from "./LessonHeader";
 import { LessonFooter } from "./LessonFooter";
-import type { LessonViewerLesson, LessonViewerContext } from "@/lib/supabase/lessons";
+import type { LessonViewerLesson, LessonViewerContext } from "@/lib/supabase/lesson-viewer.types";
 
 interface LessonShellProps {
   lesson: LessonViewerLesson;
@@ -11,6 +11,7 @@ interface LessonShellProps {
   onMarkComplete: () => void;
   progressPercent: number;
   nextLessonHref?: string | null;
+  showMarkCompleteButton?: boolean;
 }
 
 export function LessonShell({
@@ -20,19 +21,23 @@ export function LessonShell({
   onMarkComplete,
   progressPercent,
   nextLessonHref = null,
+  showMarkCompleteButton = true,
 }: LessonShellProps) {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
       <LessonHeader
         courseSlug={context?.courseSlug ?? null}
         context={context}
         xpPoints={lesson.xpPoints}
       />
-      <main className="flex-1 min-h-0 overflow-auto">{children}</main>
+      <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        {children}
+      </main>
       <LessonFooter
         progressPercent={progressPercent}
         onMarkComplete={onMarkComplete}
         nextLessonHref={nextLessonHref}
+        showMarkCompleteButton={showMarkCompleteButton}
       />
     </div>
   );

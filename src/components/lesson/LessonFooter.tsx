@@ -7,21 +7,17 @@ interface LessonFooterProps {
   progressPercent: number;
   onMarkComplete: () => void;
   nextLessonHref: string | null;
+  showMarkCompleteButton?: boolean;
 }
 
 export function LessonFooter({
   progressPercent,
   onMarkComplete,
   nextLessonHref,
+  showMarkCompleteButton = true,
 }: LessonFooterProps) {
   return (
-    <footer
-      className="h-14 shrink-0 border-t border-white/10 px-4"
-      style={{
-        background:
-          "linear-gradient(135deg, #0b1f3a 0%, #0d2a48 50%, rgba(34, 211, 238, 0.12) 100%)",
-      }}
-    >
+    <footer className="h-14 shrink-0 border-t border-white/10 bg-brand-navy px-4">
       <div className="mx-auto flex h-full max-w-6xl items-center justify-between gap-4">
         <div className="min-w-0 text-xs font-medium text-white/85">
           Progreso {progressPercent}%
@@ -37,14 +33,16 @@ export function LessonFooter({
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={onMarkComplete}
-            className="cursor-pointer rounded-lg border-white/20 bg-white/10 text-white no-underline hover:bg-white/20 hover:no-underline"
-          >
-            Marcar como completada
-          </Button>
+          {showMarkCompleteButton ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={onMarkComplete}
+              className="cursor-pointer rounded-lg border-white/20 bg-white/10 text-white no-underline hover:bg-white/20 hover:no-underline"
+            >
+              Marcar como completada
+            </Button>
+          ) : null}
           {nextLessonHref ? (
             <Button asChild size="sm" className="cursor-pointer rounded-lg no-underline hover:no-underline">
               <Link href={nextLessonHref}>Continuar</Link>
