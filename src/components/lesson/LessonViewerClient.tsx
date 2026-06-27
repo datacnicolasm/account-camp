@@ -6,11 +6,16 @@ import { LessonShell } from "./LessonShell";
 import { VideoLessonPlayer } from "./VideoLessonPlayer";
 import { QuizLessonPlayer } from "./QuizLessonPlayer";
 import { ComingSoonLessonType } from "./ComingSoonLessonType";
+import {
+  AccountingEntryLessonPlayer,
+  type AccountingValidationAction,
+} from "./accounting/AccountingEntryLessonPlayer";
 import type {
   LessonViewerLesson,
   LessonViewerContext,
   LessonViewerVideo,
   LessonViewerQuiz,
+  LessonViewerAccountingExercise,
 } from "@/lib/supabase/lesson-viewer.types";
 
 interface LessonViewerClientProps {
@@ -18,6 +23,7 @@ interface LessonViewerClientProps {
   typeKey: string;
   video: LessonViewerVideo | null;
   quiz: LessonViewerQuiz | null;
+  accountingExercise: LessonViewerAccountingExercise | null;
   context: LessonViewerContext | null;
   nextLessonHref: string | null;
   videoUrl: string;
@@ -30,6 +36,7 @@ export function LessonViewerClient({
   typeKey,
   video,
   quiz,
+  accountingExercise,
   context,
   nextLessonHref,
   videoUrl,
@@ -37,6 +44,8 @@ export function LessonViewerClient({
   durationSeconds,
 }: LessonViewerClientProps) {
   const [progressPercent, setProgressPercent] = useState(0);
+  const [validationAction, setValidationAction] =
+    useState<AccountingValidationAction | null>(null);
 
   const handleProgressChange = useCallback(
     (params: { lastPositionSeconds: number; progressPercent: number }) => {
@@ -63,30 +72,55 @@ export function LessonViewerClient({
     []
   );
 
-  const isQuizLesson = typeKey === "quiz" && quiz !== null;
+  const handleAccountingProgressChange = useCallback(
+    (params: { progressPercent: number }) => {
+      setProgressPercent(params.progressPercent);
+    },
+    []
+  );
 
-  const content =
-    isQuizLesson ? (
-      <QuizLessonPlayer
-        lessonId={lesson.id}
-        quiz={quiz}
-        nextLessonHref={nextLessonHref}
-        onProgressChange={handleQuizProgressChange}
-        onComplete={handleComplete}
-      />
-    ) : typeKey === "video" && video ? (
-      <VideoLessonPlayer
-        lessonId={lesson.id}
-        videoUrl={videoUrl}
-        posterUrl={posterUrl}
-        durationSeconds={durationSeconds}
-        initialPositionSeconds={0}
-        onProgressChange={handleProgressChange}
-        onComplete={handleComplete}
-      />
-    ) : (
-      <ComingSoonLessonType typeKey={typeKey} />
-    );
+  const handleRegisterValidationAction = useCallback(
+    (action: AccountingValidationAction | null) => {
+      setValidationAction(action);
+    },
+    []
+  );
+
+  const isQuizLesson = typeKey === "quiz" && quiz !== null;
+  const isAccountingLesson =
+    typeKey === "accounting_entries" && accountingExercise !== null;
+
+  const content = isAccountingLesson ? (
+    <AccountingEntryLessonPlayer
+      lessonId={lesson.id}
+      exercise={accountingExercise}
+      xpPoints={lesson.xpPoints}
+      nextLessonHref={nextLessonHref}
+      onProgressChange={handleAccountingProgressChange}
+      onComplete={handleComplete}
+      onRegisterValidationAction={handleRegisterValidationAction}
+    />
+  ) : isQuizLesson ? (
+    <QuizLessonPlayer
+      lessonId={lesson.id}
+      quiz={quiz}
+      nextLessonHref={nextLessonHref}
+      onProgressChange={handleQuizProgressChange}
+      onComplete={handleComplete}
+    />
+  ) : typeKey === "video" && video ? (
+    <VideoLessonPlayer
+      lessonId={lesson.id}
+      videoUrl={videoUrl}
+      posterUrl={posterUrl}
+      durationSeconds={durationSeconds}
+      initialPositionSeconds={0}
+      onProgressChange={handleProgressChange}
+      onComplete={handleComplete}
+    />
+  ) : (
+    <ComingSoonLessonType typeKey={typeKey} />
+  );
 
   return (
     <LessonShell
@@ -95,7 +129,9 @@ export function LessonViewerClient({
       onMarkComplete={handleMarkComplete}
       progressPercent={progressPercent}
       nextLessonHref={nextLessonHref}
-      showMarkCompleteButton={!isQuizLesson}
+      showMarkCompleteButton={!isQuizLesson && !isAccountingLesson}
+      requireCompletionToContinue={isQuizLesson || isAccountingLesson}
+      validationAction={isAccountingLesson ? validationAction ?? undefined : undefined}
     >
       {content}
     </LessonShell>

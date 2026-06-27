@@ -66,6 +66,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
       typeKey: data.typeKey,
       video: data.video,
       quiz: data.quiz,
+      accountingExercise: data.accountingExercise,
     });
   }
 
@@ -131,6 +132,25 @@ export default async function LessonPage({ params }: LessonPageProps) {
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             El cuestionario de esta lección no está disponible en este momento.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (data.typeKey === "accounting_entries" && !data.accountingExercise) {
+    if (isDev) {
+      // eslint-disable-next-line no-console
+      console.log("[LessonPage] accounting_entries type but no exercise data");
+    }
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-background p-6">
+        <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 text-center shadow-sm">
+          <h1 className="text-lg font-semibold text-foreground">
+            Contenido no disponible
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            El ejercicio contable de esta lección no está disponible en este momento.
           </p>
         </div>
       </div>
@@ -206,6 +226,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
       typeKey={data.typeKey}
       video={data.video}
       quiz={data.quiz}
+      accountingExercise={data.accountingExercise}
       context={data.context}
       nextLessonHref={data.nextLessonHref}
       videoUrl={videoUrl}

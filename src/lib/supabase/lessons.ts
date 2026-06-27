@@ -5,9 +5,11 @@ import type {
   LessonViewerContext,
   LessonViewerData,
   LessonViewerLesson,
+  LessonViewerAccountingExercise,
   LessonViewerQuiz,
   LessonViewerVideo,
 } from "./lesson-viewer.types";
+import { fetchAccountingExerciseData } from "./accounting-exercises";
 import { parseQuizQuestionData } from "./quiz-lesson.schema";
 import { resolveNextLessonHref } from "./lesson-navigation";
 
@@ -15,6 +17,7 @@ export type {
   LessonViewerContext,
   LessonViewerData,
   LessonViewerLesson,
+  LessonViewerAccountingExercise,
   LessonViewerQuiz,
   LessonViewerVideo,
 } from "./lesson-viewer.types";
@@ -124,6 +127,18 @@ export async function fetchLessonViewerData(
     }
   }
 
+  let accountingExercise: LessonViewerAccountingExercise | null = null;
+  if (lesson.typeSlug === "accounting_entries") {
+    accountingExercise = await fetchAccountingExerciseData(supabase, lessonId);
+    if (isDev) {
+      // eslint-disable-next-line no-console
+      console.log(
+        "[fetchLessonViewerData] accountingExercise:",
+        accountingExercise ? { title: accountingExercise.title, documents: accountingExercise.documents.length } : null
+      );
+    }
+  }
+
   let context: LessonViewerContext | null = null;
   const { data: pivotRow } = await supabase
     .from("chapter_lessons")
@@ -185,6 +200,7 @@ export async function fetchLessonViewerData(
     typeKey,
     video,
     quiz,
+    accountingExercise,
     context,
     nextLessonHref,
   };

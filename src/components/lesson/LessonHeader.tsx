@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { XpPointsBadge } from "@/components/lesson/XpPointsBadge";
 import { createClient } from "@/lib/supabase/client";
 import type { LessonViewerContext } from "@/lib/supabase/lesson-viewer.types";
 
@@ -61,10 +62,7 @@ export function LessonHeader({
         </div>
 
         <div className="shrink-0">
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-2.5 py-1 text-xs font-medium text-white/90">
-            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-            XP: {xpPoints}
-          </span>
+          <XpPointsBadge points={xpPoints} variant="header" />
         </div>
       </div>
     </header>

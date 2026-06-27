@@ -8,6 +8,13 @@ interface LessonFooterProps {
   onMarkComplete: () => void;
   nextLessonHref: string | null;
   showMarkCompleteButton?: boolean;
+  requireCompletionToContinue?: boolean;
+  validationAction?: {
+    label: string;
+    onClick: () => void;
+    disabled?: boolean;
+    isLoading?: boolean;
+  };
 }
 
 export function LessonFooter({
@@ -15,7 +22,12 @@ export function LessonFooter({
   onMarkComplete,
   nextLessonHref,
   showMarkCompleteButton = true,
+  requireCompletionToContinue = false,
+  validationAction,
 }: LessonFooterProps) {
+  const canContinue =
+    Boolean(nextLessonHref) &&
+    (!requireCompletionToContinue || progressPercent >= 100);
   return (
     <footer className="h-14 shrink-0 border-t border-white/10 bg-brand-navy px-4">
       <div className="mx-auto flex h-full max-w-6xl items-center justify-between gap-4">
@@ -33,7 +45,18 @@ export function LessonFooter({
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
-          {showMarkCompleteButton ? (
+          {validationAction ? (
+            <Button
+              size="sm"
+              onClick={validationAction.onClick}
+              disabled={validationAction.disabled || validationAction.isLoading}
+              className="cursor-pointer rounded-lg"
+            >
+              {validationAction.isLoading
+                ? "Validando…"
+                : validationAction.label}
+            </Button>
+          ) : showMarkCompleteButton ? (
             <Button
               variant="secondary"
               size="sm"
@@ -43,7 +66,7 @@ export function LessonFooter({
               Marcar como completada
             </Button>
           ) : null}
-          {nextLessonHref ? (
+          {canContinue && nextLessonHref ? (
             <Button asChild size="sm" className="cursor-pointer rounded-lg no-underline hover:no-underline">
               <Link href={nextLessonHref}>Continuar</Link>
             </Button>

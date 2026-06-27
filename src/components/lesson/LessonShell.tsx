@@ -12,6 +12,13 @@ interface LessonShellProps {
   progressPercent: number;
   nextLessonHref?: string | null;
   showMarkCompleteButton?: boolean;
+  requireCompletionToContinue?: boolean;
+  validationAction?: {
+    label: string;
+    onClick: () => void;
+    disabled?: boolean;
+    isLoading?: boolean;
+  };
 }
 
 export function LessonShell({
@@ -22,6 +29,8 @@ export function LessonShell({
   progressPercent,
   nextLessonHref = null,
   showMarkCompleteButton = true,
+  requireCompletionToContinue = false,
+  validationAction,
 }: LessonShellProps) {
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden">
@@ -38,6 +47,8 @@ export function LessonShell({
         onMarkComplete={onMarkComplete}
         nextLessonHref={nextLessonHref}
         showMarkCompleteButton={showMarkCompleteButton}
+        requireCompletionToContinue={requireCompletionToContinue}
+        validationAction={validationAction}
       />
     </div>
   );
